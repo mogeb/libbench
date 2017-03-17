@@ -5,7 +5,8 @@
 #include <linux/perf_event.h>
 #include <popt.h>
 #include <sys/syscall.h>
-#include "utils.h"
+#include <time.h>
+#include <utils.h>
 
 #define TRACK_PMU_MISSES  1
 
