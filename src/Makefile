@@ -11,7 +11,7 @@ debug: CFLAGS += -g
 debug: all
 
 install:
-	install libbench.so /usr/local/lib/
+	install libbench.so /usr/local/lib64/
 	install libustperf.h /usr/local/include
 	install utils.h /usr/local/include
 
