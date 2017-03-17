@@ -14,6 +14,7 @@ install:
 	install libbench.so /usr/local/lib64/
 	install libustperf.h /usr/local/include
 	install utils.h /usr/local/include
+	ldconfig
 
 libbench.so: libbench.c
 	gcc $(CFLAGS) -shared -fPIC -o libbench.so libbench.c
