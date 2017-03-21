@@ -113,7 +113,7 @@ void ustperf_do_work(void (*func)(), void *a);
 #define LIB_PERF_ITER_START         do \
 	{ \
 	int pos = cpu_perf[0].pos; \
-	/*pmu1_start = mmap_read_self(perf_mmap1);*/ \
+	pmu1_start = mmap_read_self(perf_mmap1); \
 	pmu2_start = mmap_read_self(perf_mmap2); \
 	pmu3_start = mmap_read_self(perf_mmap3); \
 	pmu4_start = mmap_read_self(perf_mmap4); \
@@ -125,11 +125,11 @@ void ustperf_do_work(void (*func)(), void *a);
 	int __pos = cpu_perf[0].pos; \
 	clock_gettime(CLOCK_MONOTONIC, &ts_end); \
 	pmu4_end = mmap_read_self(perf_mmap4); \
-	/*pmu1_end = mmap_read_self(perf_mmap1);*/ \
+	pmu1_end = mmap_read_self(perf_mmap1); \
 	pmu2_end = mmap_read_self(perf_mmap2); \
 	pmu3_end = mmap_read_self(perf_mmap3); \
 	ts_diff = do_ts_diff(ts_start, ts_end); \
-	/*cpu_perf[0].entries[__pos].pmu1 = pmu1_end - pmu1_start;*/ \
+	cpu_perf[0].entries[__pos].pmu1 = pmu1_end - pmu1_start; \
 	cpu_perf[0].entries[__pos].pmu2 = pmu2_end - pmu2_start; \
 	cpu_perf[0].entries[__pos].pmu3 = pmu3_end - pmu3_start; \
 	cpu_perf[0].entries[__pos].pmu4 = pmu4_end - pmu4_start; \
