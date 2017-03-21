@@ -131,38 +131,38 @@ void perf_init(int nCpus)
 #else // not TRACK_PMU_MISSES
 
     /* attr4 = dTLB-load-misses */
-    attr1.size = sizeof(struct perf_event_attr);
-    attr1.pinned = 1;
-    attr1.disabled = 0;
-    attr1.type = PERF_TYPE_HW_CACHE;
-    attr1.config = PERF_COUNT_HW_CACHE_DTLB | \
-               PERF_COUNT_HW_CACHE_OP_READ << 8 | \
-               PERF_COUNT_HW_CACHE_RESULT_MISS << 16;
-    attr1.read_format = PERF_FORMAT_GROUP|PERF_FORMAT_ID;
+    attr1->size = sizeof(struct perf_event_attr);
+    attr1->pinned = 1;
+    attr1->disabled = 0;
+    attr1->type = PERF_TYPE_HW_CACHE;
+    attr1->config = PERF_COUNT_HW_CACHE_DTLB |
+                    PERF_COUNT_HW_CACHE_OP_READ << 8 |
+                    PERF_COUNT_HW_CACHE_RESULT_MISS << 16;
+    attr1->read_format = PERF_FORMAT_GROUP | PERF_FORMAT_ID;
     strncat(metric1_str, "TLB_misses", METRIC_LEN);
 
-    attr2.size = sizeof(struct perf_event_attr);
-    attr2.pinned = 1;
-    attr2.disabled = 0;
-    attr2.type = PERF_TYPE_HARDWARE;
-    attr2.config = PERF_COUNT_HW_BUS_CYCLES;
-    attr2.read_format = PERF_FORMAT_GROUP|PERF_FORMAT_ID;
+    attr2->size = sizeof(struct perf_event_attr);
+    attr2->pinned = 1;
+    attr2->disabled = 0;
+    attr2->type = PERF_TYPE_HARDWARE;
+    attr2->config = PERF_COUNT_HW_BUS_CYCLES;
+    attr2->read_format = PERF_FORMAT_GROUP | PERF_FORMAT_ID;
     strncat(metric2_str, "Bus_cycles", METRIC_LEN);
 
-    attr3.size = sizeof(struct perf_event_attr);
-    attr3.pinned = 1;
-    attr3.disabled = 0;
-    attr3.type = PERF_TYPE_HARDWARE;
-    attr3.config = PERF_COUNT_HW_BRANCH_MISSES;
-    attr3.read_format = PERF_FORMAT_GROUP|PERF_FORMAT_ID;
+    attr3->size = sizeof(struct perf_event_attr);
+    attr3->pinned = 1;
+    attr3->disabled = 0;
+    attr3->type = PERF_TYPE_HARDWARE;
+    attr3->config = PERF_COUNT_HW_BRANCH_MISSES;
+    attr3->read_format = PERF_FORMAT_GROUP | PERF_FORMAT_ID;
     strncat(metric3_str, "Branch_misses", METRIC_LEN);
 
-    attr4.size = sizeof(struct perf_event_attr);
-    attr4.pinned = 1;
-    attr4.disabled = 0;
-    attr4.type = PERF_TYPE_HARDWARE;
-    attr4.config = PERF_COUNT_HW_BRANCH_INSTRUCTIONS;
-    attr4.read_format = PERF_FORMAT_GROUP|PERF_FORMAT_ID;
+    attr4->size = sizeof(struct perf_event_attr);
+    attr4->pinned = 1;
+    attr4->disabled = 0;
+    attr4->type = PERF_TYPE_HARDWARE;
+    attr4->config = PERF_COUNT_HW_BRANCH_INSTRUCTIONS;
+    attr4->read_format = PERF_FORMAT_GROUP | PERF_FORMAT_ID;
     strncat(metric4_str, "Branch_instructions", METRIC_LEN);
 
 #endif // TRACK_PMU_MISSES
