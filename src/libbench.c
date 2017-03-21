@@ -60,7 +60,6 @@ void output_measurements(int nCpus)
 void perf_init(int nCpus)
 {
     int i;
-    printf("libbench::perf_init\n");
 
     cpu_perf = malloc(nCpus * sizeof(struct measurement_cpu_perf));
 
@@ -74,7 +73,10 @@ void perf_init(int nCpus)
     attr2 = (struct perf_event_attr *) malloc(sizeof(struct perf_event_attr));
     attr3 = (struct perf_event_attr *) malloc(sizeof(struct perf_event_attr));
     attr4 = (struct perf_event_attr *) malloc(sizeof(struct perf_event_attr));
+}
 
+int enable_misses_pmus()
+{
     /**
       WARNING: LLC MISSES CRASHES!!!
     **/
@@ -91,16 +93,14 @@ void perf_init(int nCpus)
     /**
       WARNING: LLC MISSES CRASHES!!!
     **/
-
-#if TRACK_PMU_MISSES
     attr1->size = sizeof(struct perf_event_attr);
     attr1->pinned = 1;
     attr1->disabled = 0;
     attr1->type = PERF_TYPE_HW_CACHE;
-    attr1->config = PERF_COUNT_HW_CACHE_L1D | \
-	       PERF_COUNT_HW_CACHE_OP_READ << 8 | \
-	       PERF_COUNT_HW_CACHE_RESULT_MISS << 16;
-    attr1->read_format = PERF_FORMAT_GROUP|PERF_FORMAT_ID;
+    attr1->config = PERF_COUNT_HW_CACHE_L1D |
+                    PERF_COUNT_HW_CACHE_OP_READ << 8 |
+                    PERF_COUNT_HW_CACHE_RESULT_MISS << 16;
+    attr1->read_format = PERF_FORMAT_GROUP | PERF_FORMAT_ID;
     strncat(metric1_str, "L1_misses", METRIC_LEN);
 
     /* attr2 = cache misses */
@@ -109,7 +109,7 @@ void perf_init(int nCpus)
     attr2->disabled = 0;
     attr2->type = PERF_TYPE_HARDWARE;
     attr2->config = PERF_COUNT_HW_CACHE_MISSES;
-    attr2->read_format = PERF_FORMAT_GROUP|PERF_FORMAT_ID;
+    attr2->read_format = PERF_FORMAT_GROUP | PERF_FORMAT_ID;
     strncat(metric2_str, "Cache_misses", METRIC_LEN);
 
     attr3->size = sizeof(struct perf_event_attr);
@@ -117,7 +117,7 @@ void perf_init(int nCpus)
     attr3->disabled = 0;
     attr3->type = PERF_TYPE_HARDWARE;
     attr3->config = PERF_COUNT_HW_CPU_CYCLES;
-    attr3->read_format = PERF_FORMAT_GROUP|PERF_FORMAT_ID;
+    attr3->read_format = PERF_FORMAT_GROUP | PERF_FORMAT_ID;
     strncat(metric3_str, "CPU_cycles", METRIC_LEN);
 
     attr4->size = sizeof(struct perf_event_attr);
@@ -125,11 +125,14 @@ void perf_init(int nCpus)
     attr4->disabled = 0;
     attr4->type = PERF_TYPE_HARDWARE;
     attr4->config = PERF_COUNT_HW_INSTRUCTIONS;
-    attr4->read_format = PERF_FORMAT_GROUP|PERF_FORMAT_ID;
+    attr4->read_format = PERF_FORMAT_GROUP | PERF_FORMAT_ID;
     strncat(metric4_str, "Instructions", METRIC_LEN);
 
-#else // not TRACK_PMU_MISSES
+    return 0;
+}
 
+int enable_branches_pmus()
+{
     /* attr4 = dTLB-load-misses */
     attr1->size = sizeof(struct perf_event_attr);
     attr1->pinned = 1;
@@ -165,7 +168,7 @@ void perf_init(int nCpus)
     attr4->read_format = PERF_FORMAT_GROUP | PERF_FORMAT_ID;
     strncat(metric4_str, "Branch_instructions", METRIC_LEN);
 
-#endif // TRACK_PMU_MISSES
+    return 0;
 }
 
 //int per_thread_init()

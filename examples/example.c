@@ -26,7 +26,6 @@ int *do_measurement()
 	struct perf_event_mmap_page *perf_mmap1, *perf_mmap2, *perf_mmap3,
 		*perf_mmap4;
 
-
 	perf_mmap1 = setup_perf(attr1);
 	if(!perf_mmap1) {
 	    printf("Couldn't allocate perf_mmap1\n");
@@ -61,6 +60,7 @@ int main()
 
 	threads = (pthread_t*) malloc(sizeof(pthread_t));
 	perf_init(1);
+	enable_misses_pmus();
 	for(i = 0; i < 1; i++) {
 	    pthread_create(&threads[i], NULL, do_measurement, NULL);
 	}

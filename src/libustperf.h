@@ -8,8 +8,6 @@
 #include <time.h>
 #include <utils.h>
 
-#define TRACK_PMU_MISSES  1
-
 struct libustperf_args {
     int id;
     int loops;
@@ -38,6 +36,8 @@ char metric4_str[METRIC_LEN];
 
 void output_measurements(int nCpus);
 void perf_init(int nCpus);
+int enable_misses_pmus();
+int enable_branches_pmus();
 struct perf_event_mmap_page *setup_perf(struct perf_event_attr *attr);
 
 /* perf_event_open syscall wrapper */
@@ -86,9 +86,6 @@ static inline unsigned long long mmap_read_self(struct perf_event_mmap_page *add
 
     return count;
 }
-
-void ustperf_do_work(void (*func)(), void *a);
-//int per_thread_init();
 
 #define per_thread_init do \
 	{ \
