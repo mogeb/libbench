@@ -87,58 +87,56 @@ static inline unsigned long long mmap_read_self(struct perf_event_mmap_page *add
     return count;
 }
 
-#define per_thread_init do \
-	{ \
-	perf_mmap1 = setup_perf(attr1); \
-	if(!perf_mmap1) { \
-	    printf("Couldn't allocate perf_mmap1\n"); \
-	} \
-	perf_mmap2 = setup_perf(attr2); \
-	if(!perf_mmap2) { \
-	    printf("Couldn't allocate perf_mmap2\n"); \
-	} \
-	perf_mmap3 = setup_perf(attr3); \
-	if(!perf_mmap3) { \
-	    printf("Couldn't allocate perf_mmap3\n"); \
-	} \
-	perf_mmap4 = setup_perf(attr4); \
-	if(!perf_mmap4) { \
-	    printf("Couldn't allocate perf_mmap4\n"); \
-	} \
+#define per_thread_init do                          \
+	{                                               \
+	perf_mmap1 = setup_perf(attr1);                 \
+	if(!perf_mmap1) {                               \
+	    printf("Couldn't allocate perf_mmap1\n");   \
+	}                                               \
+	perf_mmap2 = setup_perf(attr2);                 \
+	if(!perf_mmap2) {                               \
+	    printf("Couldn't allocate perf_mmap2\n");   \
+	}                                               \
+	perf_mmap3 = setup_perf(attr3);                 \
+	if(!perf_mmap3) {                               \
+	    printf("Couldn't allocate perf_mmap3\n");   \
+	}                                               \
+	perf_mmap4 = setup_perf(attr4);                 \
+	if(!perf_mmap4) {                               \
+	    printf("Couldn't allocate perf_mmap4\n");   \
+	}                                               \
 	} while (0);
 
-#define LIB_PERF_ITER_START         do \
-	{ \
-	int pos = cpu_perf[0].pos; \
-	pmu1_start = mmap_read_self(perf_mmap1); \
-	pmu2_start = mmap_read_self(perf_mmap2); \
-	pmu3_start = mmap_read_self(perf_mmap3); \
-	pmu4_start = mmap_read_self(perf_mmap4); \
-	clock_gettime(CLOCK_MONOTONIC, &ts_start); \
+#define LIB_PERF_ITER_START         do          \
+	{                                           \
+	pmu1_start = mmap_read_self(perf_mmap1);    \
+	pmu2_start = mmap_read_self(perf_mmap2);    \
+	pmu3_start = mmap_read_self(perf_mmap3);    \
+	pmu4_start = mmap_read_self(perf_mmap4);    \
+	clock_gettime(CLOCK_MONOTONIC, &ts_start);  \
 	} while (0);
 
-#define LIB_PERF_ITER_END do \
-	{ \
-	int __pos = cpu_perf[0].pos; \
-	clock_gettime(CLOCK_MONOTONIC, &ts_end); \
-	pmu4_end = mmap_read_self(perf_mmap4); \
-	pmu1_end = mmap_read_self(perf_mmap1); \
-	pmu2_end = mmap_read_self(perf_mmap2); \
-	pmu3_end = mmap_read_self(perf_mmap3); \
-	ts_diff = do_ts_diff(ts_start, ts_end); \
-	cpu_perf[0].entries[__pos].pmu1 = pmu1_end - pmu1_start; \
-	cpu_perf[0].entries[__pos].pmu2 = pmu2_end - pmu2_start; \
-	cpu_perf[0].entries[__pos].pmu3 = pmu3_end - pmu3_start; \
-	cpu_perf[0].entries[__pos].pmu4 = pmu4_end - pmu4_start; \
-	cpu_perf[0].entries[__pos].latency = ts_diff.tv_sec * 1000000000 + \
-		ts_diff.tv_nsec; \
-	cpu_perf[0].pos++; \
-	cpu_perf[0].pos = cpu_perf[0].pos % PER_CPU_ALLOC; \
-	} while (0);
+#define LIB_PERF_ITER_END                                                  \
+    do                                                                     \
+    {                                                                      \
+	int __cpu = sched_getcpu();                                            \
+	int __pos = cpu_perf[__cpu].pos;                                       \
+	clock_gettime(CLOCK_MONOTONIC, &ts_end);                               \
+	pmu4_end = mmap_read_self(perf_mmap4);                                 \
+	pmu1_end = mmap_read_self(perf_mmap1);                                 \
+	pmu2_end = mmap_read_self(perf_mmap2);                                 \
+	pmu3_end = mmap_read_self(perf_mmap3);                                 \
+	ts_diff = do_ts_diff(ts_start, ts_end);                                \
+	cpu_perf[__cpu].entries[__pos].pmu1 = pmu1_end - pmu1_start;           \
+	cpu_perf[__cpu].entries[__pos].pmu2 = pmu2_end - pmu2_start;           \
+	cpu_perf[__cpu].entries[__pos].pmu3 = pmu3_end - pmu3_start;           \
+	cpu_perf[__cpu].entries[__pos].pmu4 = pmu4_end - pmu4_start;           \
+	cpu_perf[__cpu].entries[__pos].latency = ts_diff.tv_sec * 1000000000 + \
+						 ts_diff.tv_nsec;              \
+	cpu_perf[__cpu].pos++;                                                 \
+	cpu_perf[__cpu].pos = cpu_perf[__cpu].pos % PER_CPU_ALLOC;             \
+    } while (0);
 
-#define LIB_PERF_END do \
-	{ \
-	output_measurements(1); \
-	} while (0);
+#define LIB_PERF_END
 
 #endif // LIBUST_PERF_H
