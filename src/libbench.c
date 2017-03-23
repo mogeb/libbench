@@ -14,7 +14,7 @@ struct perf_event_mmap_page *setup_perf(struct perf_event_attr *attr)
 
     pgsz = sysconf(_SC_PAGESIZE);
 
-    fd = sys_perf_event_open(attr, 0, -1, -1, 0);
+    fd = sys_perf_event_open(attr, gettid(), -1, -1, 0);
 
     if (fd < 0) {
 	printf("sys_perf_event_open failed\n");
