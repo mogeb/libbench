@@ -171,37 +171,6 @@ int enable_branches_pmus()
     return 0;
 }
 
-//int per_thread_init()
-//{
-//	struct perf_event_mmap_page *perf_mmap1, *perf_mmap2, *perf_mmap3,
-//		*perf_mmap4;
-
-//	perf_mmap1 = setup_perf(attr1);
-//	if(!perf_mmap1) {
-//	    printf("Couldn't allocate perf_mmap1\n");
-//	    goto error;
-//	}
-//	perf_mmap2 = setup_perf(attr2);
-//	if(!perf_mmap2) {
-//	    printf("Couldn't allocate perf_mmap2\n");
-//	    goto error;
-//	}
-//	perf_mmap3 = setup_perf(attr3);
-//	if(!perf_mmap3) {
-//	    printf("Couldn't allocate perf_mmap3\n");
-//	    goto error;
-//	}
-//	perf_mmap4 = setup_perf(attr4);
-//	if(!perf_mmap4) {
-//	    printf("Couldn't allocate perf_mmap4\n");
-//	    goto error;
-//	}
-
-//	return 0;
-//error:
-//	return -1;
-//}
-
 void ustperf_do_work(void (*func)(), void *a)
 {
     int i;
